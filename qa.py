@@ -1,3 +1,8 @@
+from functools import reduce
+
+from nltk import FreqDist
+import numpy as np
+
 def read_data(dir):
     stories, questions, answers = [], [], []
     story_temp = []
@@ -24,3 +29,34 @@ def read_data(dir):
 
 def tokenize(twitter, sent):
     return twitter.morphs(sent)
+
+def preprocess_data(twitter, train_data, test_data):
+    counter = FreqDist()
+    flatten = lambda data: reduce(lambda x, y: x + y, data)
+
+    story_len = []
+    question_len = []
+
+    for stories, questions, answers in [train_data, test_data]:
+        for story in stories:
+            stories = tokenize(twitter, flatten(story))
+            story_len.append(len(stories))
+            for word in stories:
+                counter[word] += 1
+        for question in questions:
+            question = tokenize(twitter, question)
+            question_len.append(len(question))
+            for word in question:
+                counter[word] += 1
+        for answer in answers:
+            answer = tokenize(twitter, answer)
+            for word in answer:
+                counter[word] += 1
+
+    word2idx = {word : (idx + 1) for idx, (word, _) in enumerate(counter.most_common())}
+    idx2word = {idx : word for word, idx in word2idx.items()}
+
+    story_max_len = np.max(story_len)
+    question_max_len = np.max(question_len)
+
+    return word2idx, idx2word, story_max_len, question_max_len
