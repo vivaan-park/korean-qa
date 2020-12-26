@@ -21,3 +21,6 @@ def read_data(dir):
 
     lines.close()
     return stories, questions, answers
+
+def tokenize(twitter, sent):
+    return twitter.morphs(sent)
