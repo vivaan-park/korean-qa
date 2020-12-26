@@ -2,6 +2,8 @@ from functools import reduce
 
 from nltk import FreqDist
 import numpy as np
+from tensorflow.keras.preprocessing.sequence import pad_sequences
+from tensorflow.keras.utils import to_categorical
 
 def read_data(dir):
     stories, questions, answers = [], [], []
@@ -60,3 +62,19 @@ def preprocess_data(twitter, train_data, test_data):
     question_max_len = np.max(question_len)
 
     return word2idx, idx2word, story_max_len, question_max_len
+
+def vectorize(twitter, data, word2idx, story_maxlen, question_maxlen):
+    Xs, Xq, Y = [], [], []
+    flatten = lambda data: reduce(lambda x, y: x + y, data)
+
+    stories, questions, answers = data
+    for story, question, answer in zip(stories, questions, answers):
+        xs = [word2idx[i] for i in tokenize(twitter, flatten(story))]
+        xq = [word2idx[i] for i in tokenize(twitter, question)]
+        Xs.append(xs)
+        Xq.append(xq)
+        Y.append(word2idx[answer])
+
+    return pad_sequences(Xs, maxlen=story_maxlen), \
+           pad_sequences(Xq, maxlen=question_maxlen), \
+           to_categorical(Y, num_classes=len(word2idx) + 1)
