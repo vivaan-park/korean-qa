@@ -1,0 +1,4 @@
+konlpy==0.5.2
+customized-konlpy==0.0.64
+tensorflow>=2.0.1
+nltk==3.5
