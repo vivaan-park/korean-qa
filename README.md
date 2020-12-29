@@ -8,7 +8,7 @@
 - KoNLPy
 - Customized KoNLPy
 - NLTK
-- JPype
+- [JPype](https://www.lfd.uci.edu/~gohlke/pythonlibs/#jpype)
 
 <br>
 
