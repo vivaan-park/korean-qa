@@ -1,3 +1,7 @@
+# © 2020 지성. all rights reserved.
+# <llllllllll@kakao.com>
+# MIT License
+
 from functools import reduce
 import os
 import argparse
